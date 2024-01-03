@@ -23,7 +23,7 @@ const Header = () => {
   return (
     <header className="AppHeader flex justify-center items-center py-4">
       <h1 className="prose-xl text-base-content">
-        Asignatura Lite: {nombre}-<em>{curso}</em>
+        Asignatura Lite: <span className="font-bold">{nombre}-{curso}</span>
       </h1>
     </header>
   )

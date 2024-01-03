@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react"
+import RoleFloatingHint from "../roles/RoleFloatingHint"
 
 const MiCuenta = () => {
   const [addr, setAddr] = useState(null)
@@ -22,6 +23,7 @@ const MiCuenta = () => {
   return (
     <article className="AppMiCuenta">
       <h3>Mi Cuenta</h3>
+
       <ul>
         <li>
           Dirección: <span className="text-info">{addr}</span>

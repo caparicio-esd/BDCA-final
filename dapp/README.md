@@ -46,4 +46,4 @@ Currently, two official plugins are available:
 
 ### Página Mis Cosas
 
-- [ ] 6.1 - Añadir unos indicadores que informen sobre los roles del usuario: si es owner, coordinador, profesor o alumno.
+- [x] 6.1 - Añadir unos indicadores que informen sobre los roles del usuario: si es owner, coordinador, profesor o alumno.

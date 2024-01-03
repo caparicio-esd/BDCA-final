@@ -2,6 +2,7 @@ import { Outlet } from "react-router-dom"
 
 import Header from "./Header"
 import Navegacion from "./Navegacion"
+import RoleFloatingHint from "./roles/RoleFloatingHint"
 
 function Layout() {
   return (
@@ -11,6 +12,7 @@ function Layout() {
       <div className="container mx-auto my-8">
         <Outlet />
       </div>
+      <RoleFloatingHint floating={true} />
     </>
   )
 }

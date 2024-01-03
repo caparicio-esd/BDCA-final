@@ -517,6 +517,38 @@ contract Asignatura {
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    // FE-BINDINGS
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    function getRoleByAddress(
+        address _address_in
+    ) public view returns (string memory roleOut) {
+        roleOut = "Not recognized";
+        if (_address_in == owner) {
+            roleOut = "Owner";
+            return roleOut;
+        }
+        if (_address_in == coordinador) {
+            roleOut = "Coordinator";
+            return roleOut;
+        }
+        for (uint i = 0; i < profesoresLength(); i++) {
+            if (profesores[i] == _address_in) {
+                roleOut = "Coordinator";
+                break;
+            }
+        }
+        for (uint i = 0; i < matriculasLength(); i++) {
+            if (matriculas[i] == _address_in) {
+                roleOut = "Alumno";
+                break;
+            }
+        }
+        return roleOut;
+    }
+
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // MODIFIERS
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

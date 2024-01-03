@@ -23,6 +23,7 @@ export const SetCoordinator = () => {
       <form onSubmit={submitHandler}>
         <h2>Cambiar coordinador!</h2>
         <input
+          className="input input-bordered w-full max-w-xs"
           ref={input}
           name="input"
           type="text"

@@ -30,6 +30,7 @@ const Calificar = () => {
               value={alumnoAddr}
               placeholder="Dirección del alumno"
               onChange={(ev) => setAlumnoAddr(ev.target.value)}
+              className="input input-bordered w-full max-w-xs"
             />
           </p>
           <p>
@@ -41,6 +42,7 @@ const Calificar = () => {
               value={indexEval}
               placeholder="Índice de la evaluación"
               onChange={(ev) => setEvalIndex(ev.target.value)}
+              className="input input-bordered w-full max-w-xs"
             />
           </p>
           <p>
@@ -52,6 +54,7 @@ const Calificar = () => {
               value={tipo}
               placeholder="Tipo de nota"
               onChange={(ev) => setTipo(ev.target.value)}
+              className="input input-bordered w-full max-w-xs"
             />
           </p>
           <p>
@@ -63,6 +66,7 @@ const Calificar = () => {
               value={calificacion}
               placeholder="Nota"
               onChange={(ev) => setCalificacion(ev.target.value)}
+              className="input input-bordered w-full max-w-xs"
             />
           </p>
 
