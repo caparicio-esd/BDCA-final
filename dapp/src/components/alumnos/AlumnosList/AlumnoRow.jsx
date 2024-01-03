@@ -1,40 +1,43 @@
+import { useState, useEffect, useContext } from "react";
 
-import {useState, useEffect, useContext} from "react";
+import { StateContext } from "../../StateContext.mjs";
 
-import {StateContext} from "../../StateContext.mjs";
+import { Link } from "react-router-dom";
 
-import {Link} from "react-router-dom";
+const AlumnoRow = ({ alumnoIndex }) => {
+  const { asignatura } = useContext(StateContext);
 
-const AlumnoRow = ({alumnoIndex}) => {
+  const [alumnoAddr, setAlumnoAddr] = useState(null);
+  const [alumnoDatos, setAlumnoDatos] = useState(null);
 
-    const {asignatura} = useContext(StateContext);
+  useEffect(() => {
+    (async () => {
+      try {
+        console.log("Obtener la direccion del alumno.");
+        const addr = await asignatura.matriculas(alumnoIndex);
+        setAlumnoAddr(addr.toString());
 
-    const [alumnoAddr, setAlumnoAddr] = useState(null);
-    const [alumnoDatos, setAlumnoDatos] = useState(null);
+        console.log("Obtener los datos del alumno.");
+        const datos = await asignatura.datosAlumno(addr);
+        setAlumnoDatos(datos);
+      } catch (e) {
+        console.log(e);
+      }
+    })();
+  }, []); // [] -> Sin dependencias. Solo se llama a useEffect una vez.
 
-    useEffect(() => {
-        (async () => {
-            try {
-                console.log("Obtener la direccion del alumno.");
-                const addr = await asignatura.matriculas(alumnoIndex);
-                setAlumnoAddr(addr.toString());
-
-                console.log("Obtener los datos del alumno.");
-                const datos = (await asignatura.datosAlumno(addr));
-                setAlumnoDatos(datos);
-
-            } catch (e) {
-                console.log(e);
-            }
-        })();
-    }, []);   // [] -> Sin dependencias. Solo se llama a useEffect una vez.
-
-    return <tr key={"ALU-" + alumnoIndex}>
-        <th>A<sub>{alumnoIndex}</sub></th>
-        <td>{alumnoDatos?.nombre}</td>
-        <td>{alumnoDatos?.email}</td>
-        <td><Link to={`/alumnos/${alumnoAddr}`}>Info</Link></td>
-    </tr>;
+  return (
+    <tr key={"ALU-" + alumnoIndex}>
+      <th>
+        A<sub>{alumnoIndex}</sub>
+      </th>
+      <td>{alumnoDatos?.nombre}</td>
+      <td>{alumnoDatos?.email}</td>
+      <td>
+        <Link to={`/alumnos/${alumnoAddr}`}>Info</Link>
+      </td>
+    </tr>
+  );
 };
 
 export default AlumnoRow;

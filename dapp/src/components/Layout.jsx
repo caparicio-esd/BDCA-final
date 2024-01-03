@@ -4,14 +4,13 @@ import Header from "./Header";
 import Navegacion from "./Navegacion";
 
 function Layout() {
-    return (
-        <>
-            <Header />
-            <Navegacion />
-            <Outlet />
-        </>
-    );
+  return (
+    <>
+      <Header />
+      <Navegacion />
+      <Outlet />
+    </>
+  );
 }
 
 export default Layout;
-

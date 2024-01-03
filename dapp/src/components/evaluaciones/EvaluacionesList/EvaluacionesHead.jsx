@@ -1,12 +1,12 @@
-
-const EvaluacionesHead = () =>
-    <thead>
+const EvaluacionesHead = () => (
+  <thead>
     <tr>
-        <th>#</th>
-        <th>Nombre</th>
-        <th>Fecha</th>
-        <th>%</th>
+      <th>#</th>
+      <th>Nombre</th>
+      <th>Fecha</th>
+      <th>%</th>
     </tr>
-    </thead>;
+  </thead>
+);
 
 export default EvaluacionesHead;

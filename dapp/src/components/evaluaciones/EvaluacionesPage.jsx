@@ -1,12 +1,11 @@
-
 import EvaluacionesList from "./EvaluacionesList/index.jsx";
 
 const EvaluacionesPage = () => (
-    <section className="AppEvaluaciones">
-        <h2>Evaluaciones</h2>
+  <section className="AppEvaluaciones">
+    <h2>Evaluaciones</h2>
 
-        <EvaluacionesList/>
-    </section>
+    <EvaluacionesList />
+  </section>
 );
 
 export default EvaluacionesPage;

@@ -1,246 +1,584 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.19;
+pragma solidity ^0.8.16;
 
-/**
- *  El contrato Asignatura que representa una asignatura de la carrera.
- * 
- * Version Lite - Practicas
- * 
- * Posibles modificaciones:
- *  - Gestionar el limite de los puntos que aporta cada evaluacion.
- *  - ¿Puede repetirse el nombre de una evaluacion?
- *  - Cambiar algunos uint a uint8 ??
- *  - Nota minima en las evaluaciones?
- *  - Evaluacion obligatoria u opcional?
- *  - Nota final en la asignatura.
- *  - Evaluacion continua, final, extraordinaria, ....
- *  - ¿Un alumno puede ser el owner, el coordinador o un profesor?
- *  - Un profesor si puede ser el coordinador.
+/*
+ *
+ * @title Contract AsignaturaFull - BDCA - MUIRST 2324
+ *
+ * Authors:
+ * - Carlos Aparicio
+ * - Enzo Banchon
+ * - Paulina Bravo
+ *
  */
- 
- contract Asignatura {
-
-     event Tic(string msg, address account, uint8 out);
-
-     /// Version 2022 Lite - Teoria
-    string public version = "2022 Lite";
-
-    /**
-     * address del profesor que ha desplegado el contrato.
-     * El contrato lo despliega el profesor.
-     */
-    address public profesor;
-    
-    /// Nombre de la asignatura
-    string public nombre;
-    
-    /// Curso academico
-    string public curso;
-    
-    /// Datos de un alumno.
+contract Asignatura {
+    // Enums and Structs
+    enum TipoNota {
+        Empty,
+        NP,
+        Normal
+    }
     struct DatosAlumno {
         string nombre;
         string email;
+        string dni;
     }
-    
-    /// Acceder a los datos de un alumno dada su direccion.
-    mapping (address => DatosAlumno) public datosAlumno;
-    
-    // Array con las direcciones de los alumnos matriculados.
-    address[] public matriculas;
-    
-    /**
-     * Datos de una evaluacion.
-     */
     struct Evaluacion {
         string nombre;
         uint fecha;
         uint porcentaje;
+        uint nota_minima;
     }
-    
-    /// Evaluaciones de la asignatura.
-    Evaluacion[] public evaluaciones;
-        
-    /// Tipos de notas: sin usar, no presentado, y nota normal entre 0 y 1000.
-    enum TipoNota {Empty, NP, Normal}
-    
-    /**
-     * Datos de una nota.
-     * La calificacion esta multiplicada por 100 porque no hay decimales.
-     */
     struct Nota {
         TipoNota tipo;
         uint calificacion;
     }
-    
-    // Dada la direccion de un alumno, y el indice de la evaluacion, devuelve
-    // la nota del alumno.
-    mapping (address => mapping (uint => Nota)) public calificaciones;
 
-    
-     /**
-     * Constructor.
-     * 
-     * @param _nombre Nombre de la asignatura.
-     * @param _curso  Curso academico.
+    // simple attrs
+    string public version = "2023 Full";
+    string public nombre;
+    string public curso;
+    bool public cerrada;
+
+    // addresses
+    address public immutable owner;
+    address public profesor;
+    address public coordinador;
+
+    // arrays
+    address[] public profesores;
+    address[] public matriculas;
+    Evaluacion[] public evaluaciones;
+
+    // mappings
+    mapping(address => DatosAlumno) public datosAlumno;
+    mapping(address => string) public datosProfesor;
+    mapping(address => mapping(uint => Nota)) public calificaciones;
+
+    /**
+     *
+     * constructor
+     * @dev Deploy contract
+     * @param _nombre   {string memory} Asignatura name
+     * @param _curso    {string memory} Curso académico
+     *
      */
     constructor(string memory _nombre, string memory _curso) {
-        require(bytes(_nombre).length != 0, "El nombre de la asignatura no puede ser vacio");
-        require(bytes(_curso).length != 0, "El curso academico de la asignatura no puede ser vacio");
-      
-        profesor = msg.sender;
+        require(
+            bytes(_nombre).length != 0,
+            "El nombre de la asignatura no puede ser vacio"
+        );
+        require(
+            bytes(_curso).length != 0,
+            "El curso academico de la asignatura no puede ser vacio"
+        );
+
         nombre = _nombre;
         curso = _curso;
+        owner = msg.sender;
     }
-    
-    
+
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    // GENERIC METHODS
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
     /**
-     * Los alumnos pueden automatricularse con el metodo automatricula.
-     * 
-     * Impedir que se pueda meter un nombre vacio.
-     * 
-     * @param _nombre El nombre del alumno. 
-     * @param _email  El email del alumno.
+     *
+     * compareStrings
+     * @dev pure function to compare string memory vars equality
+     * @param _a {string memory}
+     * @param _b {string memory}
+     *
      */
-    function automatricula(string memory _nombre, string memory _email) soloNoMatriculados public {
+    function compareStrings(
+        string memory _a,
+        string memory _b
+    ) private pure returns (bool) {
+        return (keccak256(abi.encodePacked(_a)) ==
+            keccak256(abi.encodePacked(_b)));
+    }
+
+    /**
+     *
+     * doesAlumnoDNIExists
+     * @dev view function to handle whether a alumno's dni is already saved
+     * @param _dni {string memory} Coordinador address
+     *
+     */
+    function doesAlumnoDNIExists(
+        string memory _dni
+    ) private view returns (bool boolOut) {
+        boolOut = false;
+        for (uint i = 0; i < matriculas.length; i++) {
+            if (compareStrings(datosAlumno[matriculas[i]].dni, _dni)) {
+                boolOut = true;
+                break;
+            }
+        }
+    }
+
+    /**
+     *
+     * estaMatriculado
+     * @dev checks whether a alumno, identified by address, is matriculado
+     * @param _alumno {address} alumno address
+     *
+     */
+    function estaMatriculado(address _alumno) private view returns (bool) {
+        string memory _nombre = datosAlumno[_alumno].nombre;
+        return bytes(_nombre).length != 0;
+    }
+
+    /**
+     *
+     * cerrar
+     * @dev cierra la asignatura
+     *
+     */
+    function cerrar() external soloCoordinador {
+        cerrada = true;
+    }
+
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    // COORDINADOR
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    /**
+     *
+     * setCoordinador
+     * @dev Set address to coordinador
+     * @param _coordinador {address} Coordinador address
+     *
+     */
+    function setCoordinador(
+        address _coordinador
+    ) external soloOwner soloAbierta {
+        require(
+            _coordinador != address(0),
+            unicode"La direccion del coordinador parece que no es correcta"
+        );
+        coordinador = _coordinador;
+    }
+
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    // PROFESOR
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    /**
+     *
+     * addProfesor
+     * @dev Create a new profesor
+     * @param _profesor_address {address}       Dirección del profesor
+     * @param _name             {string memory} Nombre del profesor
+     *
+     */
+    function addProfesor(
+        address _profesor_address,
+        string memory _name
+    ) external soloOwner soloAbierta {
+        require(
+            bytes(_name).length > 0,
+            unicode"El nombre del profesor no puede estar vacío"
+        );
+        require(
+            bytes(datosProfesor[_profesor_address]).length == 0,
+            unicode"El profesor ya existe"
+        );
+
+        datosProfesor[_profesor_address] = _name;
+        profesores.push(_profesor_address);
+    }
+
+    /**
+     *
+     * matriculasLength
+     * @dev getter de tamaño de array de profesores
+     *
+     * @return (uint)
+     *
+     */
+    function profesoresLength() public view returns (uint) {
+        return profesores.length;
+    }
+
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    // MATRICULAS
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    /**
+     *
+     * automatricula
+     * @dev El alumno se puede matricular
+     *
+     * @param _nombre   {string memory} Nombre de alumno
+     * @param _dni      {string memory} Dni de alumno
+     * @param _email    {string memory} Email de alumno
+     *
+     */
+    function automatricula(
+        string memory _nombre,
+        string memory _dni,
+        string memory _email
+    ) public soloNoMatriculados soloAbierta {
         require(bytes(_nombre).length != 0, "El nombre no puede ser vacio");
+        require(bytes(_dni).length != 0, "El DNI no puede ser vacio");
+        if (doesAlumnoDNIExists(_dni)) {
+            revert DNI_Already_Exists(_dni);
+        }
 
-        DatosAlumno memory datos = DatosAlumno(_nombre, _email);
-
+        DatosAlumno memory datos = DatosAlumno(_nombre, _dni, _email);
         datosAlumno[msg.sender] = datos;
-
         matriculas.push(msg.sender);
     }
 
     /**
-     * El numero de alumnos matriculados.
      *
-     * @return El numero de alumnos matriculados.
+     * matricular
+     * @dev El propietario puede matricular a alumnos
+     *
+     * @param _address  {address}       Dirección de alumno
+     * @param _nombre   {string memory} Nombre de alumno
+     * @param _dni      {string memory} Dni de alumno
+     * @param _email    {string memory} Email de alumno
+     *
      */
-    function matriculasLength() public view returns(uint) {
+    function matricular(
+        address _address,
+        string memory _nombre,
+        string memory _dni,
+        string memory _email
+    ) public soloOwner soloAbierta {
+        require(bytes(_nombre).length != 0, "El nombre no puede ser vacio");
+        require(bytes(_dni).length != 0, "El DNI no puede ser vacio");
+        require(!doesAlumnoDNIExists(_dni), "Ya hay alguien con ese DNI");
+
+        DatosAlumno memory datos = DatosAlumno(_nombre, _dni, _email);
+        datosAlumno[_address] = datos;
+        matriculas.push(_address);
+    }
+
+    /**
+     *
+     * matriculasLength
+     * @dev getter de tamaño de array de matrículas
+     *
+     * @return (uint)
+     *
+     */
+    function matriculasLength() public view returns (uint) {
         return matriculas.length;
     }
-    
+
     /**
-     * Permite a un alumno obtener sus propios datos.
-     * 
-     * @return _nombre El nombre del alumno que invoca el metodo.
-     * @return _email  El email del alumno que invoca el metodo.
+     *
+     * quienSoy
+     * @dev retorna el nombre e email de una persona matriculada
+     *
+     * @return  datos  {DatosAlumno memory}
+     *
      */
-    function quienSoy() soloMatriculados public view returns (string memory _nombre, string memory _email) {
-        DatosAlumno memory datos = datosAlumno[msg.sender];
-        _nombre = datos.nombre;
-        _email = datos.email;
+    function quienSoy()
+        public
+        view
+        soloMatriculados
+        returns (DatosAlumno memory datos)
+    {
+        datos = datosAlumno[msg.sender];
     }
-    
+
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    // EVALUACIÓN
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
     /**
-     * Crear una prueba de evaluacion de la asignatura. Por ejemplo, el primer parcial, o la practica 3. 
      *
-     * Las evaluaciones se meteran en el array evaluaciones, y nos referiremos a ellas por su posicion en el array.
-     * 
-     * @param _nombre El nombre de la evaluacion.
-     * @param _fecha  La fecha de evaluacion (segundos desde el 1/1/1970).
-     * @param _porcentaje El porcentaje de puntos que proporciona a la nota final.
+     * creaEvaluacion
+     * @dev crea una nueva evaluación para la asignatura
      *
-     * @return La posicion en el array evaluaciones,
+     * @param _nombre       {string memory}
+     * @param _fecha        {uint}
+     * @param _porcentaje   {uint}
+     * @param _nota_minima  {uint}
+     *
+     * @return indice       {uint}
+     *
      */
-    function creaEvaluacion(string memory _nombre, uint _fecha, uint _porcentaje) soloProfesor  public returns (uint) {
-        require(bytes(_nombre).length != 0, "El nombre de la evaluacion no puede ser vacio");
-        
-        evaluaciones.push(Evaluacion(_nombre, _fecha, _porcentaje));
+    function creaEvaluacion(
+        string memory _nombre,
+        uint _fecha,
+        uint _porcentaje,
+        uint _nota_minima
+    ) public soloCoordinador soloAbierta returns (uint) {
+        require(
+            bytes(_nombre).length != 0,
+            unicode"El nombre de la evaluacion no puede ser vacio"
+        );
+        require(
+            _porcentaje < 100,
+            unicode"No puedes tener un porcentaje tan alto"
+        );
+
+        evaluaciones.push(
+            Evaluacion(_nombre, _fecha, _porcentaje, _nota_minima)
+        );
         return evaluaciones.length - 1;
     }
-    
-    /**
-     * El numero de evaluaciones creadas.
-     *
-     * @return El numero de evaluaciones creadas.
-     */
-    function evaluacionesLength() public view returns(uint) {
+
+    function evaluacionesLength() public view returns (uint) {
         return evaluaciones.length;
     }
-    
+
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    // CALIFICACIONES x EVALUACION
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
     /**
-     * Poner la nota de un alumno en una evaluacion.
-     * 
-     * @param alumno        La direccion del alumno.
-     * @param evaluacion    El indice de una evaluacion en el array evaluaciones.
-     * @param tipo          Tipo de nota.
-     * @param calificacion  La calificacion, multipilicada por 100 porque no hay decimales.
+     *
+     * califica
+     * @dev califica un alumno en una evaluación
+     *
+     * @param _alumno       {address}
+     * @param _evaluacion   {uint}
+     * @param _tipo         {TipoNota}
+     * @param _calificacion {uint}
+     *
      */
-    function califica(address alumno, uint evaluacion, TipoNota tipo, uint calificacion) soloProfesor public {
-        require(estaMatriculado(alumno), "Solo se pueden calificar a un alumno matriculado.");
-        require(evaluacion < evaluaciones.length, "No se puede calificar una evaluacion que no existe.");
-        require(calificacion <= 1000, "No se puede calificar con una nota superior a la maxima permitida.");
+    function califica(
+        address _alumno,
+        uint _evaluacion,
+        TipoNota _tipo,
+        uint _calificacion
+    ) public soloProfesor soloAbierta {
+        require(
+            estaMatriculado(_alumno),
+            "Solo se pueden calificar a un alumno matriculado."
+        );
+        require(
+            _evaluacion < evaluaciones.length,
+            "No se puede calificar una evaluacion que no existe."
+        );
+        require(
+            _calificacion <= 1000,
+            "No se puede calificar con una nota superior a la maxima permitida."
+        );
 
-        emit Tic("He calificado", alumno, 55);
-
-        Nota memory nota = Nota(tipo, calificacion);
-        
-        calificaciones[alumno][evaluacion] = nota;
+        Nota memory nota = Nota(_tipo, _calificacion);
+        calificaciones[_alumno][_evaluacion] = nota;
     }
-    
+
     /**
-     * Devuelve el tipo de nota y la calificacion que ha sacado el alumno que invoca el metodo en la evaluacion pasada como parametro.
-     * 
-     * @param evaluacion Indice de una evaluacion en el array de evaluaciones.
-     * 
-     * @return tipo         El tipo de nota que ha sacado el alumno.
-     * @return calificacion La calificacion que ha sacado el alumno.
-     */ 
-    function miNota(uint evaluacion) soloMatriculados public view returns (TipoNota tipo, uint calificacion) {
-        require(evaluacion < evaluaciones.length, "El indice de la evaluacion no existe.");
-        
-        Nota memory nota = calificaciones[msg.sender][evaluacion];
-        
-        tipo = nota.tipo;
-        calificacion = nota.calificacion;
+     *
+     * miNota
+     * @dev se consulta una calificación en una evaluación por alumno
+     *
+     * @param _evaluacion   {uint}
+     *
+     * @return _tipo         {TipoNota}
+     * @return _calificacion {uint}
+     *
+     */
+    function miNota(
+        uint _evaluacion
+    )
+        public
+        view
+        soloMatriculados
+        returns (TipoNota _tipo, uint _calificacion)
+    {
+        require(
+            _evaluacion < evaluaciones.length,
+            "El indice de la evaluacion no existe."
+        );
+
+        Nota memory nota = calificaciones[msg.sender][_evaluacion];
+        _tipo = nota.tipo;
+        _calificacion = nota.calificacion;
     }
 
-   /**
-     * Consulta si una direccion pertenece a un alumno matriculado.
-     * 
-     * @param alumno La direccion de un alumno.
-     * 
-     * @return true si es una alumno matriculado.
-     */
-    function estaMatriculado(address alumno) private view returns (bool) {
-        string memory _nombre = datosAlumno[alumno].nombre;
-        
-        return bytes(_nombre).length != 0;
-    } 
-    
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    // NOTAS FINALES
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
     /**
-     * Modificador para que una funcion solo la pueda ejecutar el profesor.
-     * 
-     * Se usa en creaEvaluacion y en califica.
+     *
+     * notaFinal
+     * @dev se calcula la nota final de un alumno sabiendo su dirección
+     *
+     * @param _address   {address}
+     *
+     * @return tipo_nota         {TipoNota}
+     * @return nota_final {uint}
+     *
      */
+    function notaFinal(
+        address _address
+    )
+        public
+        view
+        soloCoordinador
+        returns (TipoNota tipo_nota, uint nota_final)
+    {
+        (tipo_nota, nota_final) = computeNotaFinal(_address);
+    }
+
+    /**
+     *
+     * miNotaFinal
+     * @dev se calcula la nota final de un alumno sabiendo su dirección
+     *
+     *
+     * @return tipo_nota         {TipoNota}
+     * @return nota_final {uint}
+     *
+     */
+    function miNotaFinal()
+        public
+        view
+        soloMatriculados
+        returns (TipoNota tipo_nota, uint nota_final)
+    {
+        (tipo_nota, nota_final) = computeNotaFinal(msg.sender);
+    }
+
+    /**
+     *
+     * miNotaFinal
+     * @dev se calcula la nota final de un alumno sabiendo su dirección
+     *
+     * @param _address   {address}
+     *
+     * @return tipo_nota         {TipoNota}
+     * @return nota_final {uint}
+     *
+     */
+    function computeNotaFinal(
+        address _address
+    ) private view returns (TipoNota tipo_nota, uint nota_final) {
+        bool isAllNP = true;
+        bool isAnyNP = false;
+        uint notasPondSum = 0;
+        uint totalPond = 0;
+
+        for (uint i = 0; i < evaluacionesLength(); i++) {
+            // empty case
+            if (calificaciones[_address][i].tipo == TipoNota.Empty) {
+                tipo_nota = TipoNota.Empty;
+                nota_final = 0;
+                break;
+            }
+            if (calificaciones[_address][i].tipo != TipoNota.NP) {
+                isAllNP = false;
+            }
+            if (calificaciones[_address][i].tipo == TipoNota.NP) {
+                tipo_nota = TipoNota.NP;
+                isAnyNP = true;
+            }
+            totalPond += evaluaciones[i].porcentaje;
+            notasPondSum +=
+                calificaciones[_address][i].calificacion *
+                evaluaciones[i].porcentaje;
+        }
+
+        // case np
+        if (isAllNP) {
+            if (tipo_nota == TipoNota.Empty) {
+                tipo_nota = TipoNota.Empty;
+                nota_final = 0;
+            } else {
+                tipo_nota = TipoNota.NP;
+                nota_final = 0;
+            }
+        } else {
+            // case normal
+            tipo_nota = TipoNota.Normal;
+            nota_final = notasPondSum / totalPond;
+
+            // case any np
+            if (isAnyNP && nota_final > 499) {
+                tipo_nota = TipoNota.Normal;
+                nota_final = 499;
+            }
+        }
+    }
+
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    // MODIFIERS
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    modifier soloOwner() {
+        require(msg.sender == owner, "Solo permitido al propietario");
+        _;
+    }
+
+    modifier soloCoordinador() {
+        require(msg.sender == coordinador, "Solo permitido al coordinador");
+        _;
+    }
+
     modifier soloProfesor() {
-        require(msg.sender == profesor, "Solo permitido al profesor");
+        bool hasBeenProfesor = false;
+        for (uint i = 0; i < profesoresLength(); i++) {
+            if (profesores[i] == msg.sender) {
+                hasBeenProfesor = true;
+                break;
+            }
+        }
+        require(hasBeenProfesor, "Solo permitido al profesor");
         _;
     }
-    
-    /**
-     * Modificador para que una funcion solo la pueda ejecutar un alumno matriculado.
-     */
+
     modifier soloMatriculados() {
-        require(estaMatriculado(msg.sender), "Solo permitido a alumnos matriculados");
+        require(
+            estaMatriculado(msg.sender),
+            "Solo permitido a alumnos matriculados"
+        );
         _;
     }
-    
-    /**
-     * Modificador para que una funcion solo la pueda ejecutar un alumno no matriculado aun.
-     */
+
     modifier soloNoMatriculados() {
-        require(!estaMatriculado(msg.sender), "Solo permitido a alumnos no matriculados");
+        require(
+            !estaMatriculado(msg.sender),
+            "Solo permitido a alumnos no matriculados"
+        );
         _;
     }
-    
-    /**
-     * No se permite la recepcion de dinero.
-     */
+
+    modifier soloAbierta() {
+        require(!cerrada, unicode"Las asignatura está cerrada");
+        _;
+    }
+
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    // CUSTOM ERRORS
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    error DNI_Already_Exists(string dni);
+
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    // RECEIVE Y FALLBACK
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
     receive() external payable {
         revert("No se permite la recepcion de dinero.");
     }
- }
- 
+}
