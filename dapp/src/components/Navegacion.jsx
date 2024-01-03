@@ -1,11 +1,11 @@
 import { NavLink } from "react-router-dom";
 
 const Navegacion = () => {
-  const f = ({ isActive }) => (isActive ? "navlinkactive" : "");
+  const f = ({ isActive }) => (isActive ? "flex bg-primary text-base-200 px-4 py-2" : "flex px-4 py-2");
 
   return (
-    <nav>
-      <ul>
+    <nav className="flex justify-center items-center bg-primary-content text-sm">
+      <ul className="flex">
         <li>
           <NavLink className={f} to="/">
             Home

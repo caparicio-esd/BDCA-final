@@ -4,7 +4,7 @@ import AlumnosBody from "./AlumnosBody.jsx";
 const AlumnosList = () => (
   <section className="AppAlumnos">
     <h3>Todos los Alumnos</h3>
-    <table>
+    <table className="table table-zebra">
       <AlumnosHead />
       <AlumnosBody />
     </table>

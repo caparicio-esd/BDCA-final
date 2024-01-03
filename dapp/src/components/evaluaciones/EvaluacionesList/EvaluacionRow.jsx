@@ -1,23 +1,23 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext } from "react"
 
-import { StateContext } from "../../StateContext.mjs";
+import { StateContext } from "../../StateContext.mjs"
 
 const EvaluacionRow = ({ evaluacionIndex }) => {
-  const { asignatura } = useContext(StateContext);
+  const { asignatura } = useContext(StateContext)
 
-  const [evaluacion, setEvaluacion] = useState(null);
+  const [evaluacion, setEvaluacion] = useState(null)
 
   useEffect(() => {
-    console.log("Obtener la evaluacion del indice indicado.");
-    (async () => {
+    console.log("Obtener la evaluacion del indice indicado.")
+    ;(async () => {
       try {
-        const ev = await asignatura.evaluaciones(evaluacionIndex);
-        setEvaluacion(ev);
+        const ev = await asignatura.evaluaciones(evaluacionIndex)
+        setEvaluacion(ev)
       } catch (e) {
-        console.log(e);
+        console.log(e)
       }
-    })();
-  }, []); // [] -> Sin dependencias. Solo se llama a useEffect una vez.
+    })()
+  }, []) // [] -> Sin dependencias. Solo se llama a useEffect una vez.
 
   return (
     <tr key={"EVA-" + evaluacionIndex}>
@@ -25,14 +25,10 @@ const EvaluacionRow = ({ evaluacionIndex }) => {
         E<sub>{evaluacionIndex}</sub>
       </th>
       <td>{evaluacion?.nombre}</td>
-      <td>
-        {evaluacion?.fecha
-          ? new Date(1000 * evaluacion.fecha).toLocaleString()
-          : ""}
-      </td>
+      <td>{evaluacion?.fecha ? new Date(1000 * evaluacion.fecha).toLocaleString() : ""}</td>
       <td>{evaluacion?.porcentaje.toString()}</td>
     </tr>
-  );
-};
+  )
+}
 
-export default EvaluacionRow;
+export default EvaluacionRow

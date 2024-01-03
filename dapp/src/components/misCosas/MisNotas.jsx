@@ -5,7 +5,7 @@ import { StateContext } from "../StateContext.mjs";
 const MisNotas = () => (
   <section className="AppMisNotas">
     <h3>Mis Notas</h3>
-    <table>
+    <table className="table table-zebra">
       <MisNotasHead />
       <MisNotasBody />
     </table>

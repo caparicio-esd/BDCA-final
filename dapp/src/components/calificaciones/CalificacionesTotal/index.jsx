@@ -5,7 +5,7 @@ const CalificacionesPage = () => {
   return (
     <section className="AppCalificaciones">
       <h3>Todas las Calificaciones</h3>
-      <table>
+      <table className="table table-zebra">
         <CalificacionesHead />
         <CalificacionesBody />
       </table>

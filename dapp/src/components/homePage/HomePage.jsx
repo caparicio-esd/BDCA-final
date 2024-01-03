@@ -1,23 +1,23 @@
-import { useCallback, useContext, useEffect, useState } from "react";
-import { StateContext } from "../StateContext.mjs";
-import { SetCoordinator } from "./SetCoordinator";
+import { useCallback, useContext, useEffect, useState } from "react"
+import { StateContext } from "../StateContext.mjs"
+import { SetCoordinator } from "./SetCoordinator"
 
 const HomePage = () => {
-  const { asignatura, useForceReload } = useContext(StateContext);
-  const [owner, setOwner] = useState(null);
-  const [coordinator, setCoordinator] = useState(null);
+  const { asignatura, useForceReload } = useContext(StateContext)
+  const [owner, setOwner] = useState(null)
+  const [coordinator, setCoordinator] = useState(null)
   useForceReload()
 
   const fetchOwner = useCallback(async () => {
-    const owner_ = await asignatura.owner();
-    setOwner(owner_);
-    const coordinator_ = await asignatura.coordinador();
-    setCoordinator(coordinator_);
-  }, [asignatura]);
+    const owner_ = await asignatura.owner()
+    setOwner(owner_)
+    const coordinator_ = await asignatura.coordinador()
+    setCoordinator(coordinator_)
+  }, [asignatura])
 
   useEffect(() => {
-    fetchOwner();
-  }, [fetchOwner]);
+    fetchOwner()
+  }, [fetchOwner])
 
   return (
     <>
@@ -26,7 +26,7 @@ const HomePage = () => {
       <p>El coordinador es {coordinator}</p>
       <SetCoordinator />
     </>
-  );
-};
+  )
+}
 
-export default HomePage;
+export default HomePage

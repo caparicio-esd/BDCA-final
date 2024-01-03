@@ -1,16 +1,18 @@
-import { Outlet } from "react-router-dom";
+import { Outlet } from "react-router-dom"
 
-import Header from "./Header";
-import Navegacion from "./Navegacion";
+import Header from "./Header"
+import Navegacion from "./Navegacion"
 
 function Layout() {
   return (
     <>
       <Header />
       <Navegacion />
-      <Outlet />
+      <div className="container mx-auto my-8">
+        <Outlet />
+      </div>
     </>
-  );
+  )
 }
 
-export default Layout;
+export default Layout
