@@ -33,8 +33,8 @@ Currently, two official plugins are available:
 
 ### Página Alumnos
 
-- [ ] 4.1 - Que el listado de todos los alumnos solo pueda verlo el owner, el coordinador o un profesor.
-- [ ] 4.2 - Crear un formulario para que un usuario pueda automatricularse como alumno. La dirección seleccionada en Metamask identifica al alumno que se está matriculando.
+- [x] 4.1 - Que el listado de todos los alumnos solo pueda verlo el owner, el coordinador o un profesor.
+- [x] 4.2 - Crear un formulario para que un usuario pueda automatricularse como alumno. La dirección seleccionada en Metamask identifica al alumno que se está matriculando.
 - [ ] 4.3 - Crear un formulario para que el owner del contrato pueda matricular a nuevos alumnos.
 
 ### Página Calificaciones
@@ -53,3 +53,4 @@ Currently, two official plugins are available:
 - [x] M1 - comprobar que todo funciona con un cambio de red
 - [ ] M2 - hacer fallbacks si la red no es buena
 - [ ] M3 - mejorar el react para formularios
+- [ ] M4 - Si es alumno matriculado que pueda ver sus datos
