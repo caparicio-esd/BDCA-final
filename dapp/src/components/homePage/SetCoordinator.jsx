@@ -1,36 +1,37 @@
-import { useContext, useRef, useState } from "react";
-import { StateContext } from "../StateContext.mjs";
+import { useContext, useRef, useState } from "react"
+import { StateContext } from "../StateContext.mjs"
 
 export const SetCoordinator = () => {
-  const [coordinador, setCoordinador] = useState("");
-  const { asignatura } = useContext(StateContext);
-  const input = useRef();
+  const [coordinador, setCoordinador] = useState("")
+  const { asignatura, useAccounts } = useContext(StateContext)
+  const { allAccounts, currentAccount } = useAccounts()
 
   const submitHandler = async (ev) => {
-    ev.preventDefault();
+    ev.preventDefault()
     try {
-      console.log(coordinador);
       await asignatura.setCoordinador(coordinador, {
-        from: "0x8fEA26c091DCec5fA7D1817159903D8cc68a5EbA"
-      });
+        from: currentAccount,
+      })
     } finally {
-      ev.target.reset();
+      ev.target.reset()
     }
-  };
+  }
 
   return (
     <div>
-      <form onSubmit={submitHandler}>
-        <h2>Cambiar coordinador!</h2>
-        <input
-          className="input input-bordered w-full max-w-xs"
-          ref={input}
-          name="input"
-          type="text"
-          value={coordinador}
-          onChange={(ev) => setCoordinador(ev.target.value)}
-        />
+      <form onSubmit={submitHandler} className="bg-gray-100 p-4">
+        <h2 className="font-bold mb-4">Cambiar coordinador!</h2>
+        <div className="form_control flex items-center gap-4">
+          <select className="select select-bordered w-full max-w-xs" onChange={(ev) => setCoordinador(ev.target.value)}>
+            {allAccounts.map((account) => (
+              <option key={account} value={account}>
+                {account}
+              </option>
+            ))}
+          </select>
+          <button className="btn btn-primary">Cambiar</button>
+        </div>
       </form>
     </div>
-  );
-};
+  )
+}

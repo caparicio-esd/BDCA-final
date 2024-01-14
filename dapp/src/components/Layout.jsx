@@ -9,7 +9,7 @@ function Layout() {
     <>
       <Header />
       <Navegacion />
-      <div className="container mx-auto my-8">
+      <div className="container mx-auto my-8 p-4">
         <Outlet />
       </div>
       <RoleFloatingHint floating={true} />

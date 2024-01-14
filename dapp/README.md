@@ -15,11 +15,11 @@ Currently, two official plugins are available:
 
 ### Página Home
 
-- [ ] 1.1 - Añadir un elemento que muestre la dirección del usuario owner.
-- [ ] 1.2 - Añadir un elemento que muestre la dirección del coordinador de la Asignatura.
-- [ ] 1.3 - Añadir un formulario para cambiar la dirección del coordinador. Este formulario solo se debe mostrar si el usuario conectado es el owner.
-- [ ] 1.4 - Añadir un indicador que indique si la asignatura está abierta o cerrada.
-- [ ] 1.5 - Añadir un formulario que permita cerrar la asignatura. Solo se debe mostrar si el usuario conectado es el coordinador.
+- [x] 1.1 - Añadir un elemento que muestre la dirección del usuario owner.
+- [x] 1.2 - Añadir un elemento que muestre la dirección del coordinador de la Asignatura.
+- [x] 1.3 - Añadir un formulario para cambiar la dirección del coordinador. Este formulario solo se debe mostrar si el usuario conectado es el owner.
+- [x] 1.4 - Añadir un indicador que indique si la asignatura está abierta o cerrada.
+- [x] 1.5 - Añadir un formulario que permita cerrar la asignatura. Solo se debe mostrar si el usuario conectado es el coordinador.
 
 ### Página Evaluaciones
 

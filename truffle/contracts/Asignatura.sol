@@ -18,6 +18,13 @@ contract Asignatura {
         NP,
         Normal
     }
+    enum RoleType {
+        NotRecognized,
+        Student,
+        Professor,
+        Coordinator,
+        Owner
+    }
     struct DatosAlumno {
         string nombre;
         string email;
@@ -520,27 +527,38 @@ contract Asignatura {
     // FE-BINDINGS
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    /**
+     *
+     * getRoleByAddress
+     * @dev Retorna en función del address el tipo de role que cumple una dirección
+     *
+     * @param addressIn {address}
+     *
+     * @return roleOut  {RoleType}
+     *
+     */
     function getRoleByAddress(
-        address _address_in
-    ) public view returns (string memory roleOut) {
-        roleOut = "Not recognized";
-        if (_address_in == owner) {
-            roleOut = "Owner";
+        address addressIn
+    ) public view returns (RoleType roleOut) {
+        roleOut = RoleType.NotRecognized;
+        if (addressIn == owner) {
+            roleOut = RoleType.Owner;
             return roleOut;
         }
-        if (_address_in == coordinador) {
-            roleOut = "Coordinator";
+        if (addressIn == coordinador) {
+            roleOut = RoleType.Coordinator;
             return roleOut;
         }
         for (uint i = 0; i < profesoresLength(); i++) {
-            if (profesores[i] == _address_in) {
-                roleOut = "Coordinator";
+            if (profesores[i] == addressIn) {
+                roleOut = RoleType.Professor;
                 break;
             }
         }
         for (uint i = 0; i < matriculasLength(); i++) {
-            if (matriculas[i] == _address_in) {
-                roleOut = "Alumno";
+            if (matriculas[i] == addressIn) {
+                roleOut = RoleType.Student;
                 break;
             }
         }
