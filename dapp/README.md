@@ -28,8 +28,8 @@ Currently, two official plugins are available:
 
 ### Página Profesores
 
-- [ ] 3.1 - Crear una página que liste todos los profesores de la asignatura.
-- [ ] 3.2 - Crear un formulario para añadir nuevos profesores. Este formulario solo debe mostrarse si el usuario conectado es el owner.
+- [x] 3.1 - Crear una página que liste todos los profesores de la asignatura.
+- [x] 3.2 - Crear un formulario para añadir nuevos profesores. Este formulario solo debe mostrarse si el usuario conectado es el owner.
 
 ### Página Alumnos
 

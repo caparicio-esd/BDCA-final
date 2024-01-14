@@ -28,6 +28,16 @@ const Navegacion = () => {
           </NavLink>
         </li>
         <li>
+          <NavLink className={f} to="/profesores/">
+            <div className="nav_link_content flex gap-2 items-center">
+              <div className="nav_link_icon">
+                <UserCircle size={16} weight="bold" />
+              </div>
+              <div className="nav_link_label">Profesores</div>
+            </div>
+          </NavLink>
+        </li>
+        <li>
           <NavLink className={f} to="/alumnos/">
             <div className="nav_link_content flex gap-2 items-center">
               <div className="nav_link_icon">

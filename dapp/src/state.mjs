@@ -45,7 +45,6 @@ try {
  */
 const useForceReload = () => {
   const [forceReload, setForceReload] = useState(0)
-  console.log(forceReload)
   useEffect(() => {
     const eh = () => {
       const forceReload_ = forceReload + 1

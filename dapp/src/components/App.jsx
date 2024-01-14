@@ -8,6 +8,7 @@ import AlumnoDetail from "./alumnos/AlumnoDetail.jsx";
 import CalificacionesPage from "./calificaciones/CalificacionesPage.jsx";
 import MisCosasPage from "./misCosas/MisCosasPage.jsx";
 import NoMatch from "./NoMatch";
+import ProfesoresPage from "./profesores/ProfesoresPage.jsx";
 
 const App = () => (
   <div className="appCounter">
@@ -16,6 +17,7 @@ const App = () => (
         <Route path="/" element={<Layout />}>
           <Route index element={<HomePage />} />
           <Route path="evaluaciones" element={<EvaluacionesPage />} />
+          <Route path="profesores" element={<ProfesoresPage />} />
           <Route path="alumnos" element={<AlumnosPage />} />
           <Route path="alumnos/:addr" element={<AlumnoDetail />} />
           <Route path="calificaciones" element={<CalificacionesPage />} />
