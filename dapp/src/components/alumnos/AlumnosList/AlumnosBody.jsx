@@ -5,7 +5,8 @@ import { StateContext } from "../../StateContext.mjs";
 import AlumnoRow from "./AlumnoRow.jsx";
 
 const AlumnosBody = () => {
-  const { asignatura } = useContext(StateContext);
+  const { asignatura, useForceReload } = useContext(StateContext);
+  const { forceReload } = useForceReload()
 
   const [matriculasLength, setMatriculasLength] = useState(0);
 
@@ -19,7 +20,7 @@ const AlumnosBody = () => {
         console.log(e);
       }
     })();
-  }, []); // [] -> Sin dependencias. Solo se llama a useEffect una vez.
+  }, [forceReload]); // [] -> Sin dependencias. Solo se llama a useEffect una vez.
 
   let rows = [];
   for (let i = 0; i < matriculasLength; i++) {

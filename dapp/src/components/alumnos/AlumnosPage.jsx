@@ -20,9 +20,8 @@ const AlumnosPage = () => {
       </h1>
 
       {canAlumnosListBeenSeen && <AlumnosList />}
-      {role == "Not Recognized" && <AlumnoAutomatriculaForm />}
-      {role == "Owner" && <span>matricular</span>}
-
+      {role == "Not Recognized" && <AlumnoAutomatriculaForm isAutomatricula={true} />}
+      {role == "Owner" && <AlumnoAutomatriculaForm isAutomatricula={false} />}
     </section>
   )
 }

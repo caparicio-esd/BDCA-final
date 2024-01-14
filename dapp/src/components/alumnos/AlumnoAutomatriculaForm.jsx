@@ -3,7 +3,7 @@ import { StateContext } from "../StateContext.mjs"
 import { Plus, Warning, X } from "@phosphor-icons/react"
 import { isValidAddress } from "../../utils.mjs"
 
-const AlumnoAutomatriculaForm = () => {
+const AlumnoAutomatriculaForm = (props) => {
   const { asignatura, useAccounts } = useContext(StateContext)
   const { currentAccount } = useAccounts()
   const [validationError, setValidationError] = useState("")
@@ -29,9 +29,15 @@ const AlumnoAutomatriculaForm = () => {
     }
 
     try {
-      await asignatura.automatricula(name, dni, email, {
-        from: address,
-      })
+      if (props.isAutomatricula) {
+        await asignatura.automatricula(name, dni, email, {
+          from: address,
+        })
+      } else {
+        await asignatura.matricular(address, name, dni, email, {
+          from: currentAccount,
+        })
+      }
     } catch (e) {
       console.log(e)
     } finally {
@@ -62,7 +68,7 @@ const AlumnoAutomatriculaForm = () => {
           className="btn btn-primary flex items-center gap-2"
           onClick={() => document.getElementById("my_modal_2").showModal()}
         >
-          <span>Me quiero matricular</span>
+          <span>Matrícula</span>
           <span>
             <Plus size={16} />
           </span>
@@ -77,12 +83,13 @@ const AlumnoAutomatriculaForm = () => {
             <span>
               <Plus size={16} weight="bold" />
             </span>
-            <span>Me quiero matricular</span>
+            {props.isAutomatricula && <span>AutoMatriculación</span>}
+            {!props.isAutomatricula && <span>Matriculación</span>}
           </h3>
           <form className="flex flex-col gap-3" onSubmit={processForm}>
             <div className="form_control flex flex-col gap-1">
               <label htmlFor="form_new_auto_alumno_name" className="text-sm font-bold text-gray-600">
-                Tu nombre de alumno
+                Nombre de alumno
               </label>
               <input
                 type="text"
@@ -94,7 +101,7 @@ const AlumnoAutomatriculaForm = () => {
             </div>
             <div className="form_control flex flex-col gap-1">
               <label htmlFor="form_new_auto_alumno_dni" className="text-sm font-bold text-gray-600">
-                Tu DNI
+                DNI
               </label>
               <input
                 type="text"
@@ -106,7 +113,7 @@ const AlumnoAutomatriculaForm = () => {
             </div>
             <div className="form_control flex flex-col gap-1">
               <label htmlFor="form_new_auto_alumno_email" className="text-sm font-bold text-gray-600">
-                Tu email
+                Email
               </label>
               <input
                 type="text"
@@ -116,23 +123,48 @@ const AlumnoAutomatriculaForm = () => {
                 placeholder="Pon un email"
               />
             </div>
-            <div className="form_control flex flex-col gap-1">
-              <label htmlFor="form_new_auto_alumno_address" className="text-sm font-bold text-gray-600">
-                Tu address
-              </label>
-              <p className="py-2 text-sm italic text-gray-600">
-                Importante tener en cuenta que la dirección del nuevo profe, esté en la red Ganache desde el index 7
-              </p>
-              <input
-                type="text"
-                name="form_new_auto_alumno_address"
-                id="form_new_auto_alumno_address"
-                className="input input-bordered"
-                placeholder="Pon un Address valido"
-                value={changingCurrentAccount || "undefined"}
-                onChange={(ev) => setChangingCurrentAccount(ev.target.value)}
-              />
-            </div>
+
+            {/* form address input si es automatricula a */}
+            {props.isAutomatricula && (
+              <div className="form_control flex flex-col gap-1">
+                <label htmlFor="form_new_auto_alumno_address" className="text-sm font-bold text-gray-600">
+                  Tu address
+                </label>
+                <p className="py-2 text-sm italic text-gray-600">
+                  Importante tener en cuenta que la dirección del nuevo profe, esté en la red Ganache desde el index 7
+                </p>
+                <input
+                  type="text"
+                  name="form_new_auto_alumno_address"
+                  id="form_new_auto_alumno_address"
+                  className="input input-bordered"
+                  placeholder="Pon un Address valido"
+                  value={changingCurrentAccount || "undefined"}
+                  onChange={(ev) => setChangingCurrentAccount(ev.target.value)}
+                />
+              </div>
+            )}
+
+
+            {/* form address input si es automatricula a */}
+            {!props.isAutomatricula && (
+              <div className="form_control flex flex-col gap-1">
+                <label htmlFor="form_new_auto_alumno_address" className="text-sm font-bold text-gray-600">
+                  Address de alumno
+                </label>
+                <p className="py-2 text-sm italic text-gray-600">
+                  Importante tener en cuenta que la dirección del nuevo profe, esté en la red Ganache desde el index 7
+                </p>
+                <input
+                  type="text"
+                  name="form_new_auto_alumno_address"
+                  id="form_new_auto_alumno_address"
+                  className="input input-bordered"
+                  placeholder="Pon un Address valido"
+                />
+              </div>
+            )}
+
             <div className="form_control flex justify-end gap-2">
               <button className="btn btn-primary" type="submit">
                 <span>

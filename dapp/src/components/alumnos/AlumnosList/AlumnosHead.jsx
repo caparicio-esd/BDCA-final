@@ -4,6 +4,7 @@ const AlumnosHead = () => (
       <th>#</th>
       <th>Nombre</th>
       <th>email</th>
+      <th>address</th>
       <th>Info</th>
     </tr>
   </thead>

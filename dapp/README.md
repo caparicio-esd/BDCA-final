@@ -35,7 +35,7 @@ Currently, two official plugins are available:
 
 - [x] 4.1 - Que el listado de todos los alumnos solo pueda verlo el owner, el coordinador o un profesor.
 - [x] 4.2 - Crear un formulario para que un usuario pueda automatricularse como alumno. La dirección seleccionada en Metamask identifica al alumno que se está matriculando.
-- [ ] 4.3 - Crear un formulario para que el owner del contrato pueda matricular a nuevos alumnos.
+- [x] 4.3 - Crear un formulario para que el owner del contrato pueda matricular a nuevos alumnos.
 
 ### Página Calificaciones
 
