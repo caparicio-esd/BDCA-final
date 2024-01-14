@@ -4,7 +4,7 @@ import { StateContext } from "../StateContext.mjs";
 
 const MisNotas = () => (
   <section className="AppMisNotas">
-    <h3>Mis Notas</h3>
+    <h3 className="font-bold text-lg mb-2">Mis Notas</h3>
     <table className="table table-zebra">
       <MisNotasHead />
       <MisNotasBody />
@@ -49,9 +49,7 @@ const MisNotasBody = () => {
     (async () => {
       try {
         const accounts = await window.web3.eth.getAccounts();
-
         const rows = [];
-
         const ne = (await asignatura.evaluacionesLength()).toNumber();
         for (let ei = 0; ei < ne; ei++) {
           const ev = await asignatura.evaluaciones(ei);
@@ -60,10 +58,10 @@ const MisNotasBody = () => {
             <tr key={ei}>
               <td>{ev.nombre}</td>
               <td>
-                {nota?.tipo.toString() === "0" ? "" : ""}
-                {nota?.tipo.toString() === "1" ? "N.P." : ""}
-                {nota?.tipo.toString() === "2"
-                  ? (nota?.calificacion / 100).toFixed(2)
+                {nota?._tipo.toString() === "0" ? "" : ""}
+                {nota?._tipo.toString() === "1" ? "N.P." : ""}
+                {nota?._tipo.toString() === "2"
+                  ? (nota?._calificacion / 100).toFixed(2)
                   : ""}
               </td>
             </tr>,

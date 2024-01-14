@@ -6,6 +6,7 @@ const MisDatos = () => {
 
   const [nombre, setNombre] = useState(null);
   const [email, setEmail] = useState(null);
+  const [dni, setDni] = useState(null);
 
   useEffect(() => {
     (async () => {
@@ -14,8 +15,9 @@ const MisDatos = () => {
         const account = accounts[0];
         // Obtener  datos del alumno:
         const datos = await asignatura.quienSoy({ from: account });
-        setNombre(datos._nombre);
-        setEmail(datos._email);
+        setNombre(datos.nombre);
+        setEmail(datos.email);
+        setDni(datos.dni)
       } catch (e) {
         console.log(e);
       }
@@ -24,13 +26,16 @@ const MisDatos = () => {
 
   return (
     <article className="AppMisDatos">
-      <h3>Mis Datos</h3>
+      <h3 className="font-bold text-lg mb-2">Mis Datos</h3>
       <ul>
-        <li>
-          Nombre: <span style={{ color: "blue" }}>{nombre}</span>
+        <li className="p-4 bg-slate-100 mb-2">
+          Nombre: <br></br><span className="font-bold">{nombre}</span>
         </li>
-        <li>
-          Email: <span style={{ color: "blue" }}>{email}</span>
+        <li className="p-4 bg-slate-100 mb-2">
+          DNI: <br></br><span className="font-bold">{dni}</span>
+        </li>
+        <li className="p-4 bg-slate-100 mb-2">
+          Email: <br></br><span className="font-bold">{email}</span>
         </li>
       </ul>
     </article>

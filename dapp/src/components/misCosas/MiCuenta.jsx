@@ -22,14 +22,13 @@ const MiCuenta = () => {
 
   return (
     <article className="AppMiCuenta">
-      <h3>Mi Cuenta</h3>
-
+      <h3 className="font-bold text-lg mb-2">Mi Cuenta</h3>
       <ul>
-        <li>
-          Dirección: <span className="text-info">{addr}</span>
+        <li className="p-4 bg-slate-100 mb-2">
+          Dirección: <br></br><span className="font-bold">{addr}</span>
         </li>
-        <li>
-          Balance: <span className="text-info">{balance ?? "??"}</span> ethers
+        <li className="p-4 bg-slate-100 mb-2">
+          Balance: <br></br><span className="font-bold">{balance ?? "??"}</span> ethers
         </li>
       </ul>
     </article>
