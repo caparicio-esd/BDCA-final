@@ -63,10 +63,27 @@ const useForceReload = () => {
  */
 const useRole = (asignatura) => {
   const [role, setRole] = useState("Not Recognized")
+  const { currentAccount } = useAccounts()
   const setRoleHint = async () => {
     try {
       const address = await ethereum.request({ method: "eth_requestAccounts" })
-      setRole(await asignatura.getRoleByAddress(address[0]))
+      const role_ = await asignatura.getRoleByAddress(address[0])
+      switch (+role_.toString()) {
+        case 1:
+          setRole("Student")
+          break
+        case 2:
+          setRole("Professor")
+          break
+        case 3:
+          setRole("Coordinator")
+          break
+        case 4:
+          setRole("Owner")
+          break
+        default:
+          setRole("Not Recognized")
+      }
     } catch (e) {
       console.log(e)
     }

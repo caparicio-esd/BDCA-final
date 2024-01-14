@@ -47,3 +47,9 @@ Currently, two official plugins are available:
 ### Página Mis Cosas
 
 - [x] 6.1 - Añadir unos indicadores que informen sobre los roles del usuario: si es owner, coordinador, profesor o alumno.
+
+### Mejoras mías
+
+- [x] M1 - comprobar que todo funciona con un cambio de red
+- [ ] M2 - hacer fallbacks si la red no es buena
+- [ ] M3 - mejorar el react para formularios
