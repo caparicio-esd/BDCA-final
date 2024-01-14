@@ -5,9 +5,9 @@ import { StateContext } from "../../StateContext.mjs";
 import EvaluacionRow from "./EvaluacionRow.jsx";
 
 const EvaluacionesBody = () => {
-  const { asignatura } = useContext(StateContext);
-
+  const { asignatura, useForceReload } = useContext(StateContext);
   const [evaluacionesLength, setEvaluacionesLength] = useState(0);
+  const { forceReload } = useForceReload()
 
   useEffect(() => {
     console.log("Obtener el numero de evaluaciones.");
@@ -19,7 +19,7 @@ const EvaluacionesBody = () => {
         console.log(e);
       }
     })();
-  }, []); // [] -> Sin dependencias. Solo se llama a useEffect una vez.
+  }, [forceReload]);
 
   let rows = [];
   for (let i = 0; i < evaluacionesLength; i++) {

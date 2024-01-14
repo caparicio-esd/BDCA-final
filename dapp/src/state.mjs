@@ -45,16 +45,18 @@ try {
  */
 const useForceReload = () => {
   const [forceReload, setForceReload] = useState(0)
+  console.log(forceReload)
   useEffect(() => {
     const eh = () => {
-      setForceReload((fr) => fr + 1)
+      const forceReload_ = forceReload + 1
+      setForceReload(forceReload_)
     }
     txEmitter.on("tx", eh)
     return () => {
       txEmitter.off("tx", eh)
     }
   }, [])
-  return forceReload
+  return { forceReload }
 }
 
 /**
@@ -96,15 +98,13 @@ const useAccounts = () => {
   const fetchAlumnos = useCallback(async () => {
     const length = +(await asignatura.matriculasLength()).toString()
     const matriculas = await Promise.all(
-      Array.from(Array(length).keys()).map(async i => await asignatura.matriculas(i))
+      Array.from(Array(length).keys()).map(async (i) => await asignatura.matriculas(i)),
     )
     setAlumnos(matriculas)
   }, [asignatura, setAlumnos])
   const fetchProfes = useCallback(async () => {
     const length = +(await asignatura.profesoresLength()).toString()
-    const profes = await Promise.all(
-      Array.from(Array(length).keys()).map(async i => await asignatura.profesores(i))
-    )
+    const profes = await Promise.all(Array.from(Array(length).keys()).map(async (i) => await asignatura.profesores(i)))
     setProfes(profes)
   }, [asignatura, setProfes])
   const fetchCurrentAccount = useCallback(async () => {
@@ -133,8 +133,8 @@ const useAccounts = () => {
     coordinator,
     alumnos,
     profes,
-    currentAccount, 
-    allAccounts
+    currentAccount,
+    allAccounts,
   }
 }
 

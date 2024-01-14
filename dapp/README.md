@@ -23,7 +23,7 @@ Currently, two official plugins are available:
 
 ### Página Evaluaciones
 
-- [ ] 2.1 - Crear un formulario para añadir nuevas evaluaciones. Este formulario solo debe mostrarse si el usuario conectado es el coordinador.
+- [x] 2.1 - Crear un formulario para añadir nuevas evaluaciones. Este formulario solo debe mostrarse si el usuario conectado es el coordinador.
 - [ ] 2.2 - Crear un formulario para editar las evaluaciones existentes. Este formulario solo debe mostrarse si el usuario conectado es el coordinador.
 
 ### Página Profesores

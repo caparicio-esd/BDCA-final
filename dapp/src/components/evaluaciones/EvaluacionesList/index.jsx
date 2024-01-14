@@ -3,8 +3,6 @@ import EvaluacionesBody from "./EvaluacionesBody.jsx"
 
 const EvaluacionesList = () => (
   <section className="AppEvaluaciones">
-    <h3>Todas las Evaluaciones</h3>
-
     <table className="table table-zebra">
       <EvaluacionesHead />
       <EvaluacionesBody />

@@ -1,12 +1,22 @@
-const EvaluacionesHead = () => (
-  <thead>
-    <tr>
-      <th>#</th>
-      <th>Nombre</th>
-      <th>Fecha</th>
-      <th>%</th>
-    </tr>
-  </thead>
-);
+import { useContext } from "react"
+import { StateContext } from "../../StateContext.mjs"
 
-export default EvaluacionesHead;
+const EvaluacionesHead = () => {
+  const { asignatura, useRole } = useContext(StateContext)
+  const { role } = useRole(asignatura)
+
+  return (
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Nombre</th>
+        <th>Fecha</th>
+        <th>%</th>
+
+        {role == "Coordinator" && <th>Actions</th>}
+      </tr>
+    </thead>
+  )
+}
+
+export default EvaluacionesHead

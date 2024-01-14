@@ -1,10 +1,11 @@
 import { useState, useEffect, useContext } from "react"
 
 import { StateContext } from "../../StateContext.mjs"
+import { Pencil, X } from "@phosphor-icons/react"
 
 const EvaluacionRow = ({ evaluacionIndex }) => {
-  const { asignatura } = useContext(StateContext)
-
+  const { asignatura, useRole } = useContext(StateContext)
+  const { role } = useRole(asignatura)
   const [evaluacion, setEvaluacion] = useState(null)
 
   useEffect(() => {
@@ -25,8 +26,24 @@ const EvaluacionRow = ({ evaluacionIndex }) => {
         E<sub>{evaluacionIndex}</sub>
       </th>
       <td>{evaluacion?.nombre}</td>
-      <td>{evaluacion?.fecha ? new Date(1000 * evaluacion.fecha).toLocaleString() : ""}</td>
+      <td>{evaluacion?.fecha ? new Date(+evaluacion.fecha).toLocaleString() : ""}</td>
       <td>{evaluacion?.porcentaje.toString()}</td>
+      {role == "Coordinator" && (
+        <td>
+          <div className="actions flex gap-2">
+            <span className="action">
+              <button className="btn btn-circle btn-error btn-xs">
+                <X color="white" />
+              </button>
+            </span>
+            <span className="action">
+              <button className="btn btn-circle btn-warning btn-xs">
+                <Pencil />
+              </button>
+            </span>
+          </div>
+        </td>
+      )}
     </tr>
   )
 }
