@@ -1,10 +1,16 @@
 import { Pencil } from "@phosphor-icons/react"
 import CalificacionesTotal from "./CalificacionesTotal/index.jsx"
 import CalificacionesForm from "./CalificacionesForm.jsx"
-import { useEffect, useRef, useState } from "react"
+import { useContext, useEffect, useRef, useState } from "react"
+import { StateContext } from "../StateContext.mjs"
+import CalificacionesModal from "./CalificacionesModal.jsx"
 
 const CalificacionesPage = () => {
+  const { asignatura } = useContext(StateContext)
+  const [calificaciones, setCalificaciones] = useState([])
+  const [calificacionesAddres, setCalificacionesAddress] = useState([])
   const modalRef = useRef(null)
+  const modalCalificacionesRef = useRef(null)
   const [selectedStudentAddress, setSelectedStudentAddress] = useState(0)
   const [selectedCalificationIndex, setSelectedCalificationIndex] = useState(-1)
   const [selectedCalificationType, setSelectedCalificationType] = useState(-1)
@@ -29,6 +35,22 @@ const CalificacionesPage = () => {
     setSelectedCalificationIndex(-1)
     setSelectedCalificationNote(0)
   }
+  const getCalificationsAndShowInModal = async (address) => {
+    try {
+      const evaluaciones = await asignatura.evaluacionesLength()
+      const calificaciones__ = await Promise.all(
+        Array.from(Array(evaluaciones.toNumber()).keys()).map(async (n) => {
+          return await asignatura.calificaciones(address, n)
+        }),
+      )
+      const calificaciones_ = calificaciones__.map((c) => [c.calificacion.toNumber(), c.tipo.toNumber()])
+      setCalificaciones(calificaciones_)
+      setCalificacionesAddress(address)
+      modalCalificacionesRef.current.showModal()
+    } catch (e) {
+      console.log(e)
+    }
+  }
 
   return (
     <section className="AppCalificaciones">
@@ -40,7 +62,16 @@ const CalificacionesPage = () => {
         <span>Calificaciones</span>
       </h1>
 
-      <CalificacionesTotal openModalToCalificar={openModalToCalificar} />
+      <CalificacionesTotal
+        openModalToCalificar={openModalToCalificar}
+        getCalificationsAndShowInModal={getCalificationsAndShowInModal}
+      />
+
+      <CalificacionesModal
+        calificaciones={calificaciones}
+        modalCalificacionesRef={modalCalificacionesRef}
+        calificacionesAddres={calificacionesAddres}
+      />
 
       <CalificacionesForm
         modalRef={modalRef}

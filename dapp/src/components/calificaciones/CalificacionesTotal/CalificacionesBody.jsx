@@ -4,7 +4,7 @@ import { StateContext } from "../../StateContext.mjs"
 
 import CalificacionRow from "./CalificacionRow.jsx"
 
-const CalificacionesBody = ({ openModalToCalificar }) => {
+const CalificacionesBody = ({ openModalToCalificar, getCalificationsAndShowInModal }) => {
   const { asignatura } = useContext(StateContext)
 
   const [matriculasLength, setMatriculasLength] = useState(0)
@@ -23,7 +23,14 @@ const CalificacionesBody = ({ openModalToCalificar }) => {
 
   let rows = []
   for (let i = 0; i < matriculasLength; i++) {
-    rows.push(<CalificacionRow openModalToCalificar={openModalToCalificar} key={i} alumnoIndex={i} />)
+    rows.push(
+      <CalificacionRow
+        openModalToCalificar={openModalToCalificar}
+        getCalificationsAndShowInModal={getCalificationsAndShowInModal}
+        key={i}
+        alumnoIndex={i}
+      />,
+    )
   }
 
   return <tbody>{rows}</tbody>
