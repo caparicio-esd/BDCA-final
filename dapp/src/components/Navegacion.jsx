@@ -5,7 +5,7 @@ const Navegacion = () => {
   const f = ({ isActive }) => (isActive ? "flex bg-primary text-base-200 px-4 py-2" : "flex px-4 py-2")
 
   return (
-    <nav className="flex justify-center items-center bg-primary-content text-sm">
+    <nav className="flex justify-center items-center bg-primary-content text-sm sticky top-0">
       <ul className="flex">
         <li>
           <NavLink className={f} to="/">

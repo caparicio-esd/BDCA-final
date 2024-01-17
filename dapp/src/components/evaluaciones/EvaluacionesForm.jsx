@@ -21,7 +21,7 @@ const EvaluacionesForm = () => {
       console.log(e)
     } finally {
         ev.target.reset()
-        document.getElementById("my_modal_2").close()
+        document.getElementById("my_modal_1").close()
     }
   }
 
@@ -30,7 +30,7 @@ const EvaluacionesForm = () => {
       <div className="add_asignatura_button mt-8 flex justify-end">
         <button
           className="btn btn-primary flex items-center gap-2"
-          onClick={() => document.getElementById("my_modal_2").showModal()}
+          onClick={() => document.getElementById("my_modal_1").showModal()}
         >
           <span>Añadir evaluación</span>
           <span>
@@ -38,7 +38,7 @@ const EvaluacionesForm = () => {
           </span>
         </button>
       </div>
-      <dialog id="my_modal_2" className="modal">
+      <dialog id="my_modal_1" className="modal">
         <div className="modal-box">
           <form method="dialog">
             <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>

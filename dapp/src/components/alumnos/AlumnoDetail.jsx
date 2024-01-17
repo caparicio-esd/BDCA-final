@@ -44,6 +44,8 @@ const AlumnoDetail = () => {
           <span>Alumno info</span>
         </h1>
       </header>
+
+      {/*  */}
       <ul>
         <li className="p-4 bg-slate-100 mb-2">
           <b>Nombre:</b> {alumnoDatos?.nombre ?? "Desconocido"}
@@ -57,25 +59,6 @@ const AlumnoDetail = () => {
       </ul>
     </>
   )
-
-  /*
-    let {addr} = useParams();
-
-    const datos = useCacheCall("Asignatura", "datosAlumno", addr);
-
-    return <>
-        <header className="AppAlumno">
-            <h2>Alumno Info</h2>
-        </header>
-        <ul>
-            <li><b>Nombre:</b> {datos?.nombre ?? "Desconocido"}</li>
-            <li><b>Email:</b> {datos?.email ?? "Desconocido"}</li>
-            <li><b>Address:</b> {addr}</li>
-        </ul>
-        <Link to="/alumnos">Volver</Link>
-    </>
-
-     */
 }
 
 export default AlumnoDetail

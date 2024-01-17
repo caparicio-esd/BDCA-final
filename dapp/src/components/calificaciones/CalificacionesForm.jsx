@@ -22,12 +22,12 @@ const CalificacionesForm = ({ modalRef, getModalData, setSelectedCalificationTyp
       console.log(e)
     } finally {
       ev.target.reset()
-      document.getElementById("my_modal_2").close()
+      document.getElementById("my_modal_4").close()
     }
   }
   return (
     <>
-      <dialog id="my_modal_2" className="modal" ref={modalRef}>
+      <dialog id="my_modal_4" className="modal" ref={modalRef}>
         <div className="modal-box">
           {/* close x floating button */}
           <form method="dialog">

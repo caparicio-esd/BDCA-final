@@ -24,7 +24,7 @@ const AlumnoAutomatriculaForm = (props) => {
     if (!isValid) {
       setValidationError("Address " + address + " inválido")
       ev.target.reset()
-      document.getElementById("my_modal_2").close()
+      document.getElementById("my_modal_3").close()
       return
     }
 
@@ -42,7 +42,7 @@ const AlumnoAutomatriculaForm = (props) => {
       console.log(e)
     } finally {
       ev.target.reset()
-      document.getElementById("my_modal_2").close()
+      document.getElementById("my_modal_3").close()
     }
   }
 
@@ -66,7 +66,7 @@ const AlumnoAutomatriculaForm = (props) => {
       <div className="add_asignatura_button mt-8 flex justify-end">
         <button
           className="btn btn-primary flex items-center gap-2"
-          onClick={() => document.getElementById("my_modal_2").showModal()}
+          onClick={() => document.getElementById("my_modal_3").showModal()}
         >
           <span>Matrícula</span>
           <span>
@@ -74,7 +74,7 @@ const AlumnoAutomatriculaForm = (props) => {
           </span>
         </button>
       </div>
-      <dialog id="my_modal_2" className="modal">
+      <dialog id="my_modal_3" className="modal">
         <div className="modal-box">
           <form method="dialog">
             <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>

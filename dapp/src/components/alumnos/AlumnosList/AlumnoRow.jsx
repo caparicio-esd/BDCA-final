@@ -5,7 +5,8 @@ import { StateContext } from "../../StateContext.mjs"
 import { Link } from "react-router-dom"
 
 const AlumnoRow = ({ alumnoIndex }) => {
-  const { asignatura } = useContext(StateContext)
+  const { asignatura, useForceReload } = useContext(StateContext)
+  const { forceReload } = useForceReload()
 
   const [alumnoAddr, setAlumnoAddr] = useState(null)
   const [alumnoDatos, setAlumnoDatos] = useState(null)
@@ -24,7 +25,7 @@ const AlumnoRow = ({ alumnoIndex }) => {
         console.log(e)
       }
     })()
-  }, []) // [] -> Sin dependencias. Solo se llama a useEffect una vez.
+  }, [forceReload]) // [] -> Sin dependencias. Solo se llama a useEffect una vez.
 
   return (
     <tr key={"ALU-" + alumnoIndex}>

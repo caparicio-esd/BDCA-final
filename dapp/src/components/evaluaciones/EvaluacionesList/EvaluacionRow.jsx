@@ -4,9 +4,10 @@ import { StateContext } from "../../StateContext.mjs"
 import { Pencil, X } from "@phosphor-icons/react"
 
 const EvaluacionRow = ({ evaluacionIndex }) => {
-  const { asignatura, useRole } = useContext(StateContext)
+  const { asignatura, useRole, useForceReload } = useContext(StateContext)
   const { role } = useRole(asignatura)
   const [evaluacion, setEvaluacion] = useState(null)
+  const { forceReload } = useForceReload()
 
   useEffect(() => {
     console.log("Obtener la evaluacion del indice indicado.")
@@ -18,7 +19,7 @@ const EvaluacionRow = ({ evaluacionIndex }) => {
         console.log(e)
       }
     })()
-  }, []) // [] -> Sin dependencias. Solo se llama a useEffect una vez.
+  }, [forceReload]) // [] -> Sin dependencias. Solo se llama a useEffect una vez.
 
   return (
     <tr key={"EVA-" + evaluacionIndex}>
