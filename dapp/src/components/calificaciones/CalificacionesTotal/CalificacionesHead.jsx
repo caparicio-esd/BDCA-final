@@ -1,9 +1,10 @@
 import { useState, useEffect, useContext } from "react"
-import {FrameCorners} from "@phosphor-icons/react"
+import { FrameCorners } from "@phosphor-icons/react"
 import { StateContext } from "../../StateContext.mjs"
 
 const CalificacionesHead = () => {
-  const { asignatura } = useContext(StateContext)
+  const { asignatura, useRole } = useContext(StateContext)
+  const { role } = useRole(asignatura)
 
   const [evaluacionesLength, setEvaluacionesLength] = useState(0)
 
@@ -21,7 +22,9 @@ const CalificacionesHead = () => {
 
   let thead = []
   thead.push(<th key={"chae"}>A-E</th>)
-  thead.push(<th key={"actions"}>Actions</th>)
+  if (role == "Owner" || role == "Professor" || role == "Cordinator") {
+    thead.push(<th key={"actions"}>Actions</th>)
+  }
   thead.push(<th key={"chn"}>Nombre</th>)
 
   for (let i = 0; i < evaluacionesLength; i++) {
@@ -31,10 +34,10 @@ const CalificacionesHead = () => {
           <span>
             E<sub>{i}</sub>
           </span>
-          <button className="btn btn-primary btn-xs">
+          {/* <button className="btn btn-primary btn-xs">
             <span>Resumen E<sub>{i}</sub></span>
             <span><FrameCorners /></span>
-          </button>
+          </button> */}
         </div>
       </th>,
     )

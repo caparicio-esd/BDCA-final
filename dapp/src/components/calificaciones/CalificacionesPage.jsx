@@ -6,7 +6,8 @@ import { StateContext } from "../StateContext.mjs"
 import CalificacionesModal from "./CalificacionesModal.jsx"
 
 const CalificacionesPage = () => {
-  const { asignatura } = useContext(StateContext)
+  const { asignatura, useRole } = useContext(StateContext)
+  const { role } = useRole(asignatura)
   const [calificaciones, setCalificaciones] = useState([])
   const [calificacionesAddres, setCalificacionesAddress] = useState([])
   const modalRef = useRef(null)
@@ -67,11 +68,13 @@ const CalificacionesPage = () => {
         getCalificationsAndShowInModal={getCalificationsAndShowInModal}
       />
 
-      <CalificacionesModal
-        calificaciones={calificaciones}
-        modalCalificacionesRef={modalCalificacionesRef}
-        calificacionesAddres={calificacionesAddres}
-      />
+      {(role == "Professor" || role == "Coordinator" || role == "Owner") && (
+        <CalificacionesModal
+          calificaciones={calificaciones}
+          modalCalificacionesRef={modalCalificacionesRef}
+          calificacionesAddres={calificacionesAddres}
+        />
+      )}
 
       <CalificacionesForm
         modalRef={modalRef}

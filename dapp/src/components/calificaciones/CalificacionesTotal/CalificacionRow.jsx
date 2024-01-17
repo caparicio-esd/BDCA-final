@@ -62,16 +62,18 @@ const CalificacionRow = ({ alumnoIndex, openModalToCalificar, getCalificationsAn
       <th>
         A<sub>{alumnoIndex}</sub>
       </th>
-      <td>
-        <button className="btn btn-primary btn-xs" onClick={() => getCalificationsAndShowInModal(addr)}>
-          <span>
-            Resumen A<sub>{alumnoIndex}</sub>
-          </span>
-          <span>
-            <FrameCorners />
-          </span>
-        </button>
-      </td>
+      {(role == "Professor" || role == "Coordinator" || role == "Owner") && (
+        <td>
+          <button className="btn btn-primary btn-xs" onClick={() => getCalificationsAndShowInModal(addr)}>
+            <span>
+              Resumen A<sub>{alumnoIndex}</sub>
+            </span>
+            <span>
+              <FrameCorners />
+            </span>
+          </button>
+        </td>
+      )}
       <td>{alumnoName}</td>
       {notas}
     </tr>
