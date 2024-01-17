@@ -40,8 +40,11 @@ try {
   alert("Se ha producido un error: " + (error.message || error))
 }
 
+
+
+
 /**
- *
+ * revisar esto bien!!
  */
 const useForceReload = () => {
   const [forceReload, setForceReload] = useState(0)

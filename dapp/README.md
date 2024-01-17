@@ -41,7 +41,7 @@ Currently, two official plugins are available:
 
 - [ ] 5.1 - Añadir algo que permita obtener un listado con las notas de todos los alumnos en una determinada evaluación. Esta funcionalidad solo debe estar disponible para el coordinador y los profesores de la asignatura.
 - [ ] 5.2 - Añadir algo que permita obtener un listado con las notas de un alumno en un todas las evaluaciones. Esta funcionalidad solo debe estar disponible para el propio alumno.
-- [ ] 5.3 - En la tabla de calificaciones, meter algo para que pueda editarse la nota de un alumno en una determinada evaluación si tener que escribir ni la dirección del alumno, ni el índice de la evaluación. Esta funcionalidad solo debe estar disponible para los profesores de la asignatura.
+- [x] 5.3 - En la tabla de calificaciones, meter algo para que pueda editarse la nota de un alumno en una determinada evaluación si tener que escribir ni la dirección del alumno, ni el índice de la evaluación. Esta funcionalidad solo debe estar disponible para los profesores de la asignatura.
 - [ ] 5.4 - Añadir algo para que el coordinador o un profesor de la asignatura puedan obtener un listado con la notas final de todos los alumnos en la asignatura.
 
 ### Página Mis Cosas

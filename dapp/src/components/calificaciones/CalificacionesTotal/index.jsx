@@ -1,16 +1,19 @@
-import CalificacionesHead from "./CalificacionesHead.jsx";
-import CalificacionesBody from "./CalificacionesBody.jsx";
+import CalificacionesHead from "./CalificacionesHead.jsx"
+import CalificacionesBody from "./CalificacionesBody.jsx"
 
-const CalificacionesPage = () => {
+const CalificacionesPage = ({
+  openModalToCalificar
+}) => {
   return (
     <section className="AppCalificaciones">
-      <h3>Todas las Calificaciones</h3>
       <table className="table table-zebra">
         <CalificacionesHead />
-        <CalificacionesBody />
+        <CalificacionesBody
+          openModalToCalificar={openModalToCalificar}
+        />
       </table>
     </section>
-  );
-};
+  )
+}
 
-export default CalificacionesPage;
+export default CalificacionesPage
