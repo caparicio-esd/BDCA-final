@@ -7,9 +7,20 @@ import json from "./contracts/Asignatura.json"
 import { useCallback, useEffect, useState } from "react"
 console.log("Inicializando estado ...")
 let asignatura = null // Instancia desplegada del contrato.
+
+
+
 // Emite un evento "tx" vez que llega un bloque que contiene
 // transacciones del contrato asignatura.
+// nota al profe
+// He modificado esta implementación porque tenía un máximo de listeners
+// No es muy reactera, pero bueno, funciona...
 let txEmitter = new EventEmitter()
+let forceReload_ = 0
+txEmitter.on("tx", () => {
+  console.log(forceReload_);
+  forceReload_ += 1
+})
 
 try {
   // Crear una instancia nueva de web3. Usando proveedor de MetaMask.
@@ -49,15 +60,16 @@ try {
 const useForceReload = () => {
   const [forceReload, setForceReload] = useState(0)
   useEffect(() => {
-    const eh = () => {
-      const forceReload_ = forceReload + 1
-      setForceReload(forceReload_)
-    }
-    txEmitter.on("tx", eh)
-    return () => {
-      txEmitter.off("tx", eh)
-    }
-  }, [])
+    // const eh = () => {
+    //   const forceReload_ = forceReload + 1
+    //   setForceReload(forceReload_)
+    // }
+    // txEmitter.on("tx", eh)
+    // return () => {
+    //   txEmitter.off("tx", eh)
+    // }
+    setForceReload(forceReload_)
+  }, [forceReload_])
   return { forceReload }
 }
 
